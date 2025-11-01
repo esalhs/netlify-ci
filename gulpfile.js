@@ -3,6 +3,9 @@ const concat = require('gulp-concat-css');
 const plumber = require('gulp-plumber');
 const del = require('del');
 const browserSync = require('browser-sync').create();
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
+const mediaquery = require('postcss-combine-media-query');
 
 function serve() {
   browserSync.init({
@@ -20,9 +23,14 @@ function html() {
 }
 
 function css() {
-  return gulp.src('src/blocks/**/*.css')
+  const plugins = [
+    autoprefixer(),
+    mediaquery()
+  ];
+  return gulp.src('src/**/*.css')
         .pipe(plumber())
         .pipe(concat('bundle.css'))
+        .pipe(postcss(plugins))
 				.pipe(gulp.dest('dist/'))
         .pipe(browserSync.reload({stream: true}));
 }
@@ -39,7 +47,7 @@ function clean() {
 
 function watchFiles() {
   gulp.watch(['src/**/*.html'], html);
-  gulp.watch(['src/blocks/**/*.css'], css);
+  gulp.watch(['src/**/*.css'], css);
   gulp.watch(['src/images/**/*.{jpg,png,svg,gif,ico,webp,avif}'], images);
 }
 

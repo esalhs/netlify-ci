@@ -1,3 +1,9 @@
 body {
   background-color: tomato;
 }
+
+@media (width >= 700px) {
+  body {
+    background-color: blue;
+  }
+}
